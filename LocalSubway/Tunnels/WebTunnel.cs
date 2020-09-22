@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using BlueBoxMoon.LocalSubway.Cli.Connections;
 using BlueBoxMoon.LocalSubway.Connections;
 using BlueBoxMoon.LocalSubway.Sessions;
 using BlueBoxMoon.LocalSubway.Tunnels;
@@ -74,7 +75,7 @@ namespace BlueBoxMoon.LocalSubway.Client.Tunnels
                 socket = new SubwayTcpClient( _hostname, _port );
             }
 
-            Connection connection = new TcpClientConnection( connectionId, Id, session, socket );
+            Connection connection = new WebClientConnection( connectionId, Id, session, socket, _hostname );
 
             return Task.FromResult( connection );
         }

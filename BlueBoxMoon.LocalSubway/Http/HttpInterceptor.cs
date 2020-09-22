@@ -46,7 +46,7 @@ namespace BlueBoxMoon.LocalSubway.Http
         /// <value>
         /// The headers.
         /// </value>
-        public List<HttpHeader> Headers { get; private set; }
+        public Dictionary<string, string> Headers { get; private set; }
 
         /// <summary>
         /// Gets or sets the HTTP version.
@@ -123,6 +123,7 @@ namespace BlueBoxMoon.LocalSubway.Http
                 return;
             }
 
+            _bufferStream.Write( buffer, offset, count );
             var bufferBytes = _bufferStream.ToArray();
             var index = bufferBytes.IndexOf( HttpHeader.EndOfHeaders, 0, bufferBytes.Length );
 
@@ -142,7 +143,8 @@ namespace BlueBoxMoon.LocalSubway.Http
             var firstLine = lines[0];
             Headers = lines.Skip( 1 )
                 .Select( a => new HttpHeader( a ) )
-                .ToList();
+                .ToList()
+                .ToHeaderDictionary();
 
             ParseFirstLine( firstLine );
 
@@ -190,7 +192,7 @@ namespace BlueBoxMoon.LocalSubway.Http
         /// <param name="cancellationToken">The cancellation token.</param>
         protected virtual Task WriteHeadersAsync( CancellationToken cancellationToken )
         {
-            var headerText = GetFirstLine() + "\r\n" + string.Join( "\r\n", Headers.Select( a => a.ToString() ) );
+            var headerText = GetFirstLine() + "\r\n" + string.Join( "\r\n", Headers.Select( a => $"{a.Key}: {a.Value}" ) ) + "\r\n\r\n";
             var headerBytes = Encoding.UTF8.GetBytes( headerText );
 
             return OutputStream.WriteAsync( headerBytes, 0, headerBytes.Length, cancellationToken );

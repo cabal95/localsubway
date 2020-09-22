@@ -73,7 +73,7 @@ namespace BlueBoxMoon.LocalSubway.Connections
                         break;
                     }
 
-                    await Session.SendDataAsync( Id, new ArraySegment<byte>( bytes, 0, count ) );
+                    await SendDataToRemoteAsync( new ArraySegment<byte>( bytes, 0, count ) );
                 }
                 catch
                 {
@@ -107,6 +107,15 @@ namespace BlueBoxMoon.LocalSubway.Connections
             Session = null;
 
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Sends the data to remote session.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        protected virtual Task SendDataToRemoteAsync( ArraySegment<byte> data )
+        {
+            return Session.SendDataAsync( Id, data );
         }
 
         #endregion

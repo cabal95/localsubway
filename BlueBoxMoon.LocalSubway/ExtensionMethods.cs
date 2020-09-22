@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+
+using BlueBoxMoon.LocalSubway.Http;
 
 namespace BlueBoxMoon.LocalSubway
 {
@@ -63,6 +66,31 @@ namespace BlueBoxMoon.LocalSubway
             }
 
             return Guid.TryParse( s, out var result ) ? result : Guid.Empty;
+        }
+
+        /// <summary>
+        /// Takes a collection of <see cref="HttpHeader"/> objects and
+        /// represents them as a dictionary safe for use with HTTP.
+        /// </summary>
+        /// <param name="headers">The headers.</param>
+        /// <returns>A dictionary of headers.</returns>
+        public static Dictionary<string, string> ToHeaderDictionary( this IEnumerable<HttpHeader> headers )
+        {
+            var dictionary = new Dictionary<string, string>( StringComparer.OrdinalIgnoreCase );
+
+            foreach ( var header in headers )
+            {
+                if ( dictionary.ContainsKey( header.Name ) )
+                {
+                    dictionary[header.Name] = dictionary[header.Name] + ", " + header.Value;
+                }
+                else
+                {
+                    dictionary[header.Name] = header.Value;
+                }
+            }
+
+            return dictionary;
         }
     }
 }
