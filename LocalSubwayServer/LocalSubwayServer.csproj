@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>BlueBoxMoon.LocalSubway.Server</RootNamespace>
+    <AssemblyName>LocalSubwayServer</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlueBoxMoon.LocalSubway\BlueBoxMoon.LocalSubway.csproj" />
+  </ItemGroup>
+
+
+</Project>
