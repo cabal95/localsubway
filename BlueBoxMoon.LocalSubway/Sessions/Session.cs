@@ -165,6 +165,7 @@ namespace BlueBoxMoon.LocalSubway.Sessions
                     if ( message is DataMessage dataMessage )
                     {
                         var arrayBuffer = new ArraySegment<byte>( dataMessage.ToByteArray() );
+                        System.Console.WriteLine( $"Sending {arrayBuffer.Count} bytes" );
                         await Socket.SendAsync( arrayBuffer, WebSocketMessageType.Binary, true, cancellationToken );
                     }
                     else if ( message is Message )
@@ -174,6 +175,8 @@ namespace BlueBoxMoon.LocalSubway.Sessions
                         var arrayBuffer = new ArraySegment<byte>( Encoding.UTF8.GetBytes( json ) );
                         await Socket.SendAsync( arrayBuffer, WebSocketMessageType.Text, true, cancellationToken );
                     }
+
+                    System.Console.WriteLine( "Sent." );
                 }
             }
         }
