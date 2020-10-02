@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace BlueBoxMoon.LocalSubway.Client
+namespace BlueBoxMoon.LocalSubway.Cli
 {
     /// <summary>
     /// A JSON converted based on System.Text.Json

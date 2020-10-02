@@ -5,7 +5,7 @@ using BlueBoxMoon.LocalSubway.Connections;
 using BlueBoxMoon.LocalSubway.Sessions;
 using BlueBoxMoon.LocalSubway.Tunnels;
 
-namespace BlueBoxMoon.LocalSubway.Client.Tunnels
+namespace BlueBoxMoon.LocalSubway.Cli.Tunnels
 {
     /// <summary>
     /// A tunnel that simply creates echo connections back to the sender.

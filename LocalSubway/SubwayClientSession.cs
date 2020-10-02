@@ -2,7 +2,7 @@
 
 using BlueBoxMoon.LocalSubway.Sessions;
 
-namespace BlueBoxMoon.LocalSubway.Client
+namespace BlueBoxMoon.LocalSubway.Cli
 {
     /// <summary>
     /// Handles session communication with the server.
