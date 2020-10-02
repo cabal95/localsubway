@@ -168,7 +168,10 @@ namespace BlueBoxMoon.LocalSubway.Http
             //
             // Write any body data we may have already received.
             //
-            await OutputStream.WriteAsync( bufferBytes, index + 4, bufferBytes.Length - index - 4, cancellationToken );
+            if ( bufferBytes.Length - index - endOfHeaders.Length > 0 )
+            {
+                await OutputStream.WriteAsync( bufferBytes, index + endOfHeaders.Length, bufferBytes.Length - index - endOfHeaders.Length, cancellationToken );
+            }
 
             //
             // Switch to direct streaming mode.
