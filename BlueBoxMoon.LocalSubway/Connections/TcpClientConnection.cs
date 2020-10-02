@@ -73,6 +73,7 @@ namespace BlueBoxMoon.LocalSubway.Connections
                         break;
                     }
 
+                    Console.WriteLine( System.Text.Encoding.UTF8.GetString( bytes, 0, count ) );
                     await SendDataToRemoteAsync( new ArraySegment<byte>( bytes, 0, count ) );
                 }
                 catch

@@ -34,7 +34,8 @@ namespace BlueBoxMoon.LocalSubway.Cli
 
             foreach ( var header in ForcedHeaders )
             {
-                Headers[header.Key] = header.Value;
+                Headers.Remove( header.Key );
+                Headers.Add( header.Key, header.Value );
             }
         }
     }

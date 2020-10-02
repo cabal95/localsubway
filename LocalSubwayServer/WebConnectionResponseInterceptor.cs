@@ -48,7 +48,10 @@ namespace BlueBoxMoon.LocalSubway.Server
 
             foreach ( var header in Headers )
             {
-                _response.Headers[header.Key] = header.Value;
+                foreach ( var value in header.Value )
+                {
+                    _response.Headers.Add( header.Key, value );
+                }
             }
 
             await _response.StartAsync();
