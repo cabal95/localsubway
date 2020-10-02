@@ -118,14 +118,24 @@ namespace BlueBoxMoon.LocalSubway.Http
             //
             if ( _bufferStream == null )
             {
-                await OutputStream.WriteAsync( buffer, offset, count, cancellationToken );
+                if ( count > 0 )
+                {
+                    await OutputStream.WriteAsync( buffer, offset, count, cancellationToken );
+                }
 
                 return;
             }
 
             _bufferStream.Write( buffer, offset, count );
             var bufferBytes = _bufferStream.ToArray();
-            var index = bufferBytes.IndexOf( HttpHeader.EndOfHeaders, 0, bufferBytes.Length );
+            var endOfHeaders = new byte[] { ( byte ) '\r', ( byte ) '\n', ( byte ) '\r', ( byte ) '\n' };
+            var index = bufferBytes.IndexOf( endOfHeaders, 0, bufferBytes.Length );
+
+            if ( index == -1 )
+            {
+                endOfHeaders = new byte[] { ( byte ) '\n', ( byte ) '\n' };
+                index = bufferBytes.IndexOf( endOfHeaders, 0, bufferBytes.Length );
+            }
 
             //
             // Check if we haven't received the end of header marker yet.
@@ -139,7 +149,7 @@ namespace BlueBoxMoon.LocalSubway.Http
             // Convert the header text into the individual headers.
             //
             var headerText = Encoding.UTF8.GetString( bufferBytes, 0, index );
-            var lines = headerText.Split( new[] { "\r\n" }, StringSplitOptions.None );
+            var lines = headerText.Replace( "\r", string.Empty ).Split( new[] { "\n" }, StringSplitOptions.None );
             var firstLine = lines[0];
             Headers = lines.Skip( 1 )
                 .Select( a => new HttpHeader( a ) )

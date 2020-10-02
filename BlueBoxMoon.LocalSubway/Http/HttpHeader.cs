@@ -7,11 +7,6 @@ namespace BlueBoxMoon.LocalSubway.Http
     /// </summary>
     public class HttpHeader
     {
-        /// <summary>
-        /// The end of headers byte sequence.
-        /// </summary>
-        public static readonly byte[] EndOfHeaders = new byte[] { ( byte ) '\r', ( byte ) '\n', ( byte ) '\r', ( byte ) '\n' };
-
         #region Properties
 
         /// <summary>
