@@ -65,7 +65,6 @@ namespace BlueBoxMoon.LocalSubway.Connections
                     var bytes = new byte[4096];
 
                     var count = await LocalSocket.GetStream().ReadAsync( bytes, 0, bytes.Length, CancellationToken.None );
-                    Console.WriteLine( $"Read {count} bytes." );
 
                     if ( count == 0 )
                     {
@@ -73,7 +72,6 @@ namespace BlueBoxMoon.LocalSubway.Connections
                         break;
                     }
 
-                    Console.WriteLine( System.Text.Encoding.UTF8.GetString( bytes, 0, count ) );
                     await SendDataToRemoteAsync( new ArraySegment<byte>( bytes, 0, count ) );
                 }
                 catch
@@ -93,7 +91,6 @@ namespace BlueBoxMoon.LocalSubway.Connections
         /// <param name="data">The data to be sent.</param>
         public override Task SendDataToLocalAsync( ArraySegment<byte> data )
         {
-            Console.WriteLine( $"Wrote {data.Count} bytes." );
             return LocalSocket.GetStream().WriteAsync( data.Array, data.Offset, data.Count, CancellationToken.None );
         }
 

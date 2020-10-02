@@ -91,9 +91,7 @@ namespace BlueBoxMoon.LocalSubway.Server
         /// <param name="data">The data to be sent.</param>
         public override async Task SendDataToLocalAsync( ArraySegment<byte> data )
         {
-            Console.WriteLine( $"Writing {data.Count} bytes." );
             await _interceptor.WriteAsync( data.Array, data.Offset, data.Count, _cancellationTokenSource.Token );
-            Console.WriteLine( "Write complete" );
         }
 
         /// <summary>

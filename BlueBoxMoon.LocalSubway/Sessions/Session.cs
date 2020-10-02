@@ -110,7 +110,6 @@ namespace BlueBoxMoon.LocalSubway.Sessions
                         using ( var sr = new StreamReader( receiveStream, Encoding.UTF8 ) )
                         {
                             var json = sr.ReadToEnd();
-                            System.Console.WriteLine( $"Received {json}" );
                             var message = JsonConverter.DeserializeObject<Message>( json );
 
                             if ( message.Type == MessageType.Response )
@@ -165,18 +164,14 @@ namespace BlueBoxMoon.LocalSubway.Sessions
                     if ( message is DataMessage dataMessage )
                     {
                         var arrayBuffer = new ArraySegment<byte>( dataMessage.ToByteArray() );
-                        System.Console.WriteLine( $"Sending {arrayBuffer.Count} bytes" );
                         await Socket.SendAsync( arrayBuffer, WebSocketMessageType.Binary, true, cancellationToken );
                     }
                     else if ( message is Message )
                     {
                         var json = JsonConverter.SerializeObject( message );
-                        System.Console.WriteLine( $"Sending {json}" );
                         var arrayBuffer = new ArraySegment<byte>( Encoding.UTF8.GetBytes( json ) );
                         await Socket.SendAsync( arrayBuffer, WebSocketMessageType.Text, true, cancellationToken );
                     }
-
-                    System.Console.WriteLine( "Sent." );
                 }
             }
         }
@@ -189,7 +184,6 @@ namespace BlueBoxMoon.LocalSubway.Sessions
         {
             if ( PendingMessages.TryRemove( response.Id, out var pendingMessage ) )
             {
-                Console.WriteLine( $"Got response to {response.Id}" );
                 pendingMessage.Source.TrySetResult( response );
             }
             else

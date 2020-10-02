@@ -86,7 +86,14 @@ namespace BlueBoxMoon.LocalSubway.Cli
                 return;
             }
 
-            await sessionTask;
+            try
+            {
+                await sessionTask;
+            }
+            catch ( Exception ex )
+            {
+                Console.WriteLine( $"Error communicating with server: {ex.Message}" );
+            }
         }
 
         /// <summary>

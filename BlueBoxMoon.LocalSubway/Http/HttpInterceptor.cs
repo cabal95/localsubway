@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,93 +7,6 @@ using System.Threading.Tasks;
 
 namespace BlueBoxMoon.LocalSubway.Http
 {
-    public class HeaderCollection : IEnumerable<KeyValuePair<string, IReadOnlyList<string>>>
-    {
-        private readonly Dictionary<string, IList<string>> _headers = new Dictionary<string, IList<string>>( StringComparer.OrdinalIgnoreCase );
-
-        public HeaderCollection()
-        {
-        }
-
-        public HeaderCollection( IEnumerable<string> headerLines )
-        {
-            foreach ( var headerLine in headerLines )
-            {
-                var pairs = headerLine.Split( new[] { ": " }, StringSplitOptions.None );
-                Add( pairs[0], pairs[1] );
-            }
-        }
-
-        public void Add( string key, string value )
-        {
-            IList<string> values;
-
-            if ( _headers.ContainsKey( key ) )
-            {
-                values = _headers[key];
-            }
-            else
-            {
-                values = new List<string>();
-                _headers[key] = values;
-            }
-
-            values.Add( value );
-        }
-
-        public void Remove( string key )
-        {
-            if ( _headers.ContainsKey( key ) )
-            {
-                _headers.Remove( key );
-            }
-        }
-
-        public IEnumerable<string> Get( string key )
-        {
-            if ( _headers.ContainsKey( key ) )
-            {
-                return _headers[key];
-            }
-
-            return null;
-        }
-
-        public IEnumerator<KeyValuePair<string, IReadOnlyList<string>>> GetEnumerator()
-        {
-            foreach ( var header in _headers )
-            {
-                yield return new KeyValuePair<string, IReadOnlyList<string>>( header.Key, ( IReadOnlyList<string> ) header.Value );
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        /// <summary>
-        /// Converts to string.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String" /> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            var headers = new List<string>();
-
-            foreach ( var header in _headers )
-            {
-                foreach ( var value in header.Value )
-                {
-                    headers.Add( $"{header.Key}: {value}" );
-                }
-            }
-
-            return string.Join( "\r\n", headers );
-        }
-    }
-
     /// <summary>
     /// Intercepts stream writes and parses out any HTTP headers in a request
     /// or response data stream. Allows for modification before sending through
@@ -291,7 +202,6 @@ namespace BlueBoxMoon.LocalSubway.Http
         protected virtual Task WriteHeadersAsync( CancellationToken cancellationToken )
         {
             var headerText = GetFirstLine() + "\r\n" + Headers.ToString() + "\r\n\r\n";
-            Console.WriteLine( headerText );
             var headerBytes = Encoding.UTF8.GetBytes( headerText );
 
             return OutputStream.WriteAsync( headerBytes, 0, headerBytes.Length, cancellationToken );
