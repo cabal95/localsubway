@@ -36,11 +36,16 @@ namespace BlueBoxMoon.LocalSubway.Cli.Connections
         {
             _interceptor = new HttpWebRequestInterceptor( socket.GetStream() );
 
-            Console.WriteLine( "hostHEader = " + hostHeader );
             if ( hostHeader != null )
             {
                 _interceptor.ForcedHeaders.Add( "Host", hostHeader );
             }
+
+            //
+            // Ensure the connection is closed so our interceptor can properly track requests.
+            // TODO: Without this, the server hangs for some reason. Need to investigate.
+            //
+            _interceptor.ForcedHeaders.Add( "Connection", "close" );
         }
 
         #endregion
