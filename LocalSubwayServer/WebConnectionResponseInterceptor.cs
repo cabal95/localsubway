@@ -50,7 +50,7 @@ namespace BlueBoxMoon.LocalSubway.Server
             {
                 foreach ( var value in header.Value )
                 {
-                    _response.Headers.Add( header.Key, value );
+                    _response.Headers.Append( header.Key, value );
                 }
             }
 
