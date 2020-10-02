@@ -140,7 +140,7 @@ namespace BlueBoxMoon.LocalSubway.Server
             //
             if ( request.ContentLength.HasValue )
             {
-                request.Body.CopyTo( requestStream );
+                await request.Body.CopyToAsync( requestStream );
             }
 
             //
