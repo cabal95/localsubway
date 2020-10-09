@@ -6,7 +6,7 @@ namespace BlueBoxMoon.LocalSubway.Server
     {
         private readonly ConcurrentDictionary<string, WebTunnel> _tunnels = new ConcurrentDictionary<string, WebTunnel>();
 
-        public string Domain => "subway.blueboxmoon.com";
+        public string Domain => "subwayapp.dev";
 
         public WebTunnel FindTunnel( string subdomain )
         {
