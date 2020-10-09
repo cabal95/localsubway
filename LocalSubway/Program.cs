@@ -67,6 +67,11 @@ namespace BlueBoxMoon.LocalSubway.Cli
                 url = options.Server.ToString().Replace( "http://", "ws://" ).Replace( "https://", "wss://" );
             }
 
+            if ( options.Key != null && options.Key != string.Empty )
+            {
+                ws.Options.SetRequestHeader( "Authorization", $"Bearer {options.Key}" );
+            }
+
             try
             {
                 await ws.ConnectAsync( new Uri( $"{url}connect" ), token );

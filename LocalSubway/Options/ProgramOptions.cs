@@ -14,6 +14,9 @@ namespace BlueBoxMoon.LocalSubway.Cli.Options
         [Option( 's', "server", Required = false, HelpText = "Defines the server URI to use when opening the tunnels (Default is https://subwayapp.dev)." )]
         public Uri Server { get; set; }
 
+        [Option( 'k', "key", Required = false, HelpText = "Specifies the authentication token to use if your server requires it." )]
+        public string Key { get; set; }
+
         [Option( 'e', "echo", Required = false, HelpText = "Creates a simple TCP tunnel that echoes back whatever it receives." )]
         public IEnumerable<EchoTunnelOptions> EchoTunnels { get; set; }
 
