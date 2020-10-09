@@ -1,17 +1,10 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
+using System;
 
 using BlueBoxMoon.LocalSubway.Server.Authentication;
 
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -47,7 +40,10 @@ namespace BlueBoxMoon.LocalSubway.Server
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseWebSockets();
+            app.UseWebSockets( new WebSocketOptions
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds( 60 )
+            } );
 
             //app.UseHttpsRedirection();
 
