@@ -35,8 +35,8 @@ namespace BlueBoxMoon.LocalSubway.Cli.Options
             get
             {
                 yield return new Example( "TCP Tunnel", new ProgramOptions { TcpTunnels = new List<TcpTunnelOptions> { new TcpTunnelOptions( "5100:localhost:5000" ) } } );
-                yield return new Example( "HTTP Tunnel", new ProgramOptions { HttpTunnels = new List<HttpTunnelOptions> { new HttpTunnelOptions( "5100:localhost:5000" ) } } );
-                yield return new Example( "HTTPS Tunnel", new ProgramOptions { HttpsTunnels = new List<HttpsTunnelOptions> { new HttpsTunnelOptions( "5100:localhost:5000" ) } } );
+                yield return new Example( "HTTP Tunnel", new ProgramOptions { HttpTunnels = new List<HttpTunnelOptions> { new HttpTunnelOptions( "mydomain:localhost:5000" ) } } );
+                yield return new Example( "HTTPS Tunnel", new ProgramOptions { HttpsTunnels = new List<HttpsTunnelOptions> { new HttpsTunnelOptions( "mydomain:localhost:5001" ) } } );
                 yield return new Example( "Echo Tunnel", new ProgramOptions { EchoTunnels = new List<EchoTunnelOptions> { new EchoTunnelOptions( "5100" ) } } );
             }
         }
