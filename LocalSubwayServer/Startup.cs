@@ -1,7 +1,9 @@
 using System;
 
 using BlueBoxMoon.LocalSubway.Server.Authentication;
+using BlueBoxMoon.LocalSubway.Server.Configuration;
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -24,12 +26,25 @@ namespace BlueBoxMoon.LocalSubway.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices( IServiceCollection services )
         {
+            var config = Configuration.Get<BasicConfiguration>();
+
             services.AddControllers();
 
             services.AddAuthentication()
-                .AddScheme<TunnelAuthenticationOptions, TunnelAuthenticationHandler>( AuthenticationSchemes.Tunnel, null );
+                .AddScheme<AuthenticationSchemeOptions, TunnelAuthenticationHandler>( AuthenticationSchemes.Tunnel, null );
 
             services.AddSingleton<SubwayDomainManager>();
+
+            switch ( config.AuthType )
+            {
+                case AuthenticationType.None:
+                    services.AddSingleton<IAuthenticationProvider, EmptyAuthenticationProvider>();
+                    break;
+
+                case AuthenticationType.ApiKey:
+                    services.AddSingleton<IAuthenticationProvider, ApiKeyAuthenticationProvider>();
+                    break;
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

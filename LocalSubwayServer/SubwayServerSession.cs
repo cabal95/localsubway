@@ -3,8 +3,11 @@ using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 using BlueBoxMoon.LocalSubway.Messages;
+using BlueBoxMoon.LocalSubway.Server.Authentication;
 using BlueBoxMoon.LocalSubway.Sessions;
 using BlueBoxMoon.LocalSubway.Tunnels;
+
+using Microsoft.AspNetCore.Http;
 
 namespace BlueBoxMoon.LocalSubway.Server
 {
@@ -12,10 +15,16 @@ namespace BlueBoxMoon.LocalSubway.Server
     {
         private readonly SubwayDomainManager _domainManager;
 
-        public SubwayServerSession( WebSocket socket, SubwayDomainManager domainManager )
+        private readonly IAuthenticationProvider _authenticationProvider;
+
+        private readonly HttpContext _context;
+
+        public SubwayServerSession( WebSocket socket, HttpContext context, SubwayDomainManager domainManager, IAuthenticationProvider authenticationProvider )
             : base( socket, new JsonConverter() )
         {
             _domainManager = domainManager;
+            _context = context;
+            _authenticationProvider = authenticationProvider;
         }
 
         protected override Task RemoveTunnelAsync( Tunnel tunnel, bool notifyClient )

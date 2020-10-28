@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using BlueBoxMoon.LocalSubway.Server.Authentication;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BlueBoxMoon.LocalSubway.Server
 {
@@ -12,21 +13,12 @@ namespace BlueBoxMoon.LocalSubway.Server
     {
         private readonly RequestDelegate _next;
 
-        private readonly SubwayDomainManager _domainManager;
+        private readonly IServiceProvider _serviceProvider;
 
-        private readonly bool _requireAuthentication;
-
-        public WebSocketManagerMiddleware( RequestDelegate next, SubwayDomainManager domainManager, IConfiguration configuration )
+        public WebSocketManagerMiddleware( RequestDelegate next, IServiceProvider serviceProvider )
         {
             _next = next;
-            _domainManager = domainManager;
-
-            var allowedTokens = configuration["AllowedTokens"];
-
-            if ( allowedTokens != null && allowedTokens != string.Empty )
-            {
-                _requireAuthentication = true;
-            }
+            _serviceProvider = serviceProvider;
         }
 
         public async Task Invoke( HttpContext context )
@@ -38,24 +30,24 @@ namespace BlueBoxMoon.LocalSubway.Server
                 return;
             }
 
-            if ( _requireAuthentication )
+            var authenticateResult = await context.AuthenticateAsync( AuthenticationSchemes.Tunnel );
+
+            if ( !authenticateResult.Succeeded )
             {
-                var authenticateResult = await context.AuthenticateAsync( AuthenticationSchemes.Tunnel );
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync( "Unauthorized" );
 
-                if ( !authenticateResult.Succeeded )
-                {
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    await context.Response.WriteAsync( "Unauthorized" );
-
-                    return;
-                }
-
-                context.User = authenticateResult.Principal;
+                return;
             }
+
+            context.User = authenticateResult.Principal;
 
             var socket = await context.WebSockets.AcceptWebSocketAsync();
 
-            var session = new SubwayServerSession( socket, _domainManager );
+            var session = ActivatorUtilities.CreateInstance<SubwayServerSession>( _serviceProvider, new object[] {
+                socket,
+                context
+            } );
 
             try
             {
