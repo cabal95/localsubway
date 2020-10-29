@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using CommandLine;
 using CommandLine.Text;
@@ -38,6 +39,83 @@ namespace BlueBoxMoon.LocalSubway.Cli.Options
                 yield return new Example( "HTTP Tunnel", new ProgramOptions { HttpTunnels = new List<HttpTunnelOptions> { new HttpTunnelOptions( "mydomain:localhost:5000" ) } } );
                 yield return new Example( "HTTPS Tunnel", new ProgramOptions { HttpsTunnels = new List<HttpsTunnelOptions> { new HttpsTunnelOptions( "mydomain:localhost:5001" ) } } );
                 yield return new Example( "Echo Tunnel", new ProgramOptions { EchoTunnels = new List<EchoTunnelOptions> { new EchoTunnelOptions( "5100" ) } } );
+            }
+        }
+
+        /// <summary>
+        /// Merges the options from <paramref name="otherOptions"/> into these options.
+        /// </summary>
+        /// <param name="otherOptions">The other options.</param>
+        public void MergeOptionsFrom( ProgramOptions otherOptions )
+        {
+            if ( otherOptions.Server != null )
+            {
+                Server = otherOptions.Server;
+            }
+
+            if ( otherOptions.Key != null && otherOptions.Key.Length > 0 )
+            {
+                Key = otherOptions.Key;
+            }
+
+            //
+            // Merge any defined echo tunnels.
+            //
+            if ( otherOptions.EchoTunnels != null && otherOptions.EchoTunnels.Any() )
+            {
+                if ( EchoTunnels == null )
+                {
+                    EchoTunnels = otherOptions.EchoTunnels;
+                }
+                else
+                {
+                    EchoTunnels = new List<EchoTunnelOptions>( EchoTunnels.Concat( otherOptions.EchoTunnels ) );
+                }
+            }
+
+            //
+            // Merge any defined TCP tunnels.
+            //
+            if ( otherOptions.TcpTunnels != null && otherOptions.TcpTunnels.Any() )
+            {
+                if ( TcpTunnels == null )
+                {
+                    TcpTunnels = otherOptions.TcpTunnels;
+                }
+                else
+                {
+                    TcpTunnels = new List<TcpTunnelOptions>( TcpTunnels.Concat( otherOptions.TcpTunnels ) );
+                }
+            }
+
+            //
+            // Merge any defined HTTP tunnels.
+            //
+            if ( otherOptions.HttpTunnels != null && otherOptions.HttpTunnels.Any() )
+            {
+                if ( HttpTunnels == null )
+                {
+                    HttpTunnels = otherOptions.HttpTunnels;
+                }
+                else
+                {
+                    HttpTunnels = new List<HttpTunnelOptions>( HttpTunnels.Concat( otherOptions.HttpTunnels ) );
+                }
+            }
+
+            //
+            // Merge any defined HTTPS tunnels.
+            //
+            if ( otherOptions.HttpsTunnels != null && otherOptions.HttpsTunnels.Any() )
+            {
+                if ( HttpsTunnels == null )
+                {
+                    HttpsTunnels = otherOptions.HttpsTunnels;
+                }
+                else
+                {
+                    HttpsTunnels = new List<HttpsTunnelOptions>( HttpsTunnels.Concat( otherOptions.HttpsTunnels ) );
+                }
             }
         }
     }

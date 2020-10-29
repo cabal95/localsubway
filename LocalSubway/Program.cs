@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
@@ -29,11 +30,51 @@ namespace BlueBoxMoon.LocalSubway.Cli
         }
 
         /// <summary>
+        /// Reads and merge configuration files with the command line options.
+        /// </summary>
+        /// <param name="commandLineOptions">The command line options.</param>
+        /// <returns>The final options to use.</returns>
+        private static ProgramOptions ReadAndMergeConfigFiles( ProgramOptions commandLineOptions )
+        {
+            ProgramOptions options = new ProgramOptions();
+
+            var homePath = Environment.GetFolderPath( Environment.SpecialFolder.UserProfile );
+            var homeConfigPath = Path.Combine( homePath, ".localsubway" );
+
+            if ( File.Exists( homeConfigPath ) )
+            {
+                Console.WriteLine( $"Reading configuration from {homeConfigPath}" );
+
+                var json = File.ReadAllText( homeConfigPath );
+                var homeOptions = System.Text.Json.JsonSerializer.Deserialize<ProgramOptions>( json );
+
+                options.MergeOptionsFrom( homeOptions );
+            }
+
+            var currentConfigPath = Path.Combine( Environment.CurrentDirectory, ".localsubway" );
+            if ( File.Exists( currentConfigPath ) )
+            {
+                Console.WriteLine( $"Reading configuration from {currentConfigPath}" );
+
+                var json = File.ReadAllText( currentConfigPath );
+                var currentPathOptions = System.Text.Json.JsonSerializer.Deserialize<ProgramOptions>( json );
+
+                options.MergeOptionsFrom( currentPathOptions );
+            }
+
+            options.MergeOptionsFrom( commandLineOptions );
+
+            return options;
+        }
+
+        /// <summary>
         /// Runs program with the specified options.
         /// </summary>
         /// <param name="options">The options.</param>
         private static async Task RunWithOptionsAsync( ProgramOptions options )
         {
+            options = ReadAndMergeConfigFiles( options );
+
             var cts = new CancellationTokenSource();
 
             Console.CancelKeyPress += ( sender, e ) =>

@@ -34,6 +34,13 @@ namespace BlueBoxMoon.LocalSubway.Cli.Options
         /// <summary>
         /// Initializes a new instance of the <see cref="TcpTunnelOptions"/> class.
         /// </summary>
+        public TcpTunnelOptions()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TcpTunnelOptions"/> class.
+        /// </summary>
         /// <param name="arguments">The arguments.</param>
         /// <exception cref="ArgumentException">
         /// Invalid syntax for TCP tunnel. - arguments
