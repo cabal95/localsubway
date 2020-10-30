@@ -73,6 +73,8 @@ namespace BlueBoxMoon.LocalSubway.Cli
         /// <param name="options">The options.</param>
         private static async Task RunWithOptionsAsync( ProgramOptions options )
         {
+            var userCancelled = false;
+
             options = ReadAndMergeConfigFiles( options );
 
             var cts = new CancellationTokenSource();
@@ -80,17 +82,25 @@ namespace BlueBoxMoon.LocalSubway.Cli
             Console.CancelKeyPress += ( sender, e ) =>
             {
                 e.Cancel = true;
+                userCancelled = true;
                 cts.Cancel();
             };
 
-            try
+            do
             {
-                await RunAsync( options, cts.Token );
-            }
-            catch ( TaskCanceledException )
-            {
-                /* Intentionally ignored, the user requested the cancel. */
-            }
+                try
+                {
+                    await RunAsync( options, cts.Token );
+                }
+                catch ( TaskCanceledException ) when ( userCancelled )
+                {
+                    /* Intentionally ignored, the user requested the cancel. */
+                }
+                catch ( Exception ex )
+                {
+                    Console.WriteLine( $"Error communicating with server: {ex.Message}" );
+                }
+            } while ( options.Forever && !userCancelled );
         }
 
         /// <summary>
@@ -132,14 +142,7 @@ namespace BlueBoxMoon.LocalSubway.Cli
                 return;
             }
 
-            try
-            {
-                await sessionTask;
-            }
-            catch ( Exception ex )
-            {
-                Console.WriteLine( $"Error communicating with server: {ex.Message}" );
-            }
+            await sessionTask;
         }
 
         /// <summary>
