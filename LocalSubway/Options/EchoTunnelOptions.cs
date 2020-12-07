@@ -18,6 +18,13 @@ namespace BlueBoxMoon.LocalSubway.Cli.Options
         /// <summary>
         /// Initializes a new instance of the <see cref="EchoTunnelOptions"/> class.
         /// </summary>
+        public EchoTunnelOptions()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EchoTunnelOptions"/> class.
+        /// </summary>
         /// <param name="arguments">The arguments.</param>
         /// <exception cref="ArgumentException">Invalid port for echo tunnel. - arguments</exception>
         public EchoTunnelOptions( string arguments )

@@ -11,6 +11,14 @@ namespace BlueBoxMoon.LocalSubway.Cli.Options
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpsTunnelOptions"/> class.
         /// </summary>
+        public HttpsTunnelOptions()
+            : base()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpsTunnelOptions"/> class.
+        /// </summary>
         /// <param name="arguments">The arguments.</param>
         /// <exception cref="ArgumentException">Invalid URI for web tunnel. - arguments</exception>
         public HttpsTunnelOptions( string arguments )
