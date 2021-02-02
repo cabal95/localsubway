@@ -34,25 +34,25 @@ namespace BlueBoxMoon.LocalSubway.Cli.Options
         /// A collection of Echo tunnel configuration options.
         /// </summary>
         [Option( 'e', "echo", Required = false, HelpText = "Creates a simple TCP tunnel that echoes back whatever it receives." )]
-        public IEnumerable<EchoTunnelOptions> EchoTunnels { get; set; }
+        public IEnumerable<EchoTunnelOptions> EchoTunnels { get; set; } = new List<EchoTunnelOptions>();
 
         /// <summary>
         /// A collection of TCP tunnel configuration options.
         /// </summary>
         [Option( 't', "tcp", Required = false, HelpText = "Creates a TCP tunnel that routes the remote listening port to the specified host and port." )]
-        public IEnumerable<TcpTunnelOptions> TcpTunnels { get; set; }
+        public IEnumerable<TcpTunnelOptions> TcpTunnels { get; set; } = new List<TcpTunnelOptions>();
 
         /// <summary>
         /// A collection of HTTP tunnel configuration options.
         /// </summary>
         [Option( 'h', "http", Required = false, HelpText = "Creates a web tunnel that routes the requested subdomain to the specified HTTP server." )]
-        public IEnumerable<HttpTunnelOptions> HttpTunnels { get; set; }
+        public IEnumerable<HttpTunnelOptions> HttpTunnels { get; set; } = new List<HttpTunnelOptions>();
 
         /// <summary>
         /// A collection of HTTPS tunnel configuration options.
         /// </summary>
         [Option( 'H', "https", Required = false, HelpText = "Creates a web tunnel that routes the requested subdomain to the specified HTTPS server." )]
-        public IEnumerable<HttpsTunnelOptions> HttpsTunnels { get; set; }
+        public IEnumerable<HttpsTunnelOptions> HttpsTunnels { get; set; } = new List<HttpsTunnelOptions>();
 
         /// <summary>
         /// A collection of examples to display.
