@@ -205,7 +205,7 @@ namespace BlueBoxMoon.LocalSubway.Cli
                 var tunnelId = response.Values["tunnel_id"].ToString().AsGuid();
                 var tunnelPort = response.Values["port"].ToString().AsInteger();
 
-                session.AddTunnel( new EchoTunnel( tunnelId ) );
+                session.AddTunnel( new TcpClientTunnel( tunnelId, tcpOptions.TargetHostname, tcpOptions.TargetPort ) );
 
                 Console.WriteLine( $"TCP Tunnel {tunnelPort} => {tcpOptions.TargetHostname}:{tcpOptions.TargetPort} ready." );
             }
@@ -223,7 +223,7 @@ namespace BlueBoxMoon.LocalSubway.Cli
 
                 if ( !response.Success )
                 {
-                    Console.WriteLine( $"Failed to initialize TCP tunnel for '{echoOptions.Port}': {response.Message}" );
+                    Console.WriteLine( $"Failed to initialize Echo tunnel for '{echoOptions.Port}': {response.Message}" );
                     return false;
                 }
 
