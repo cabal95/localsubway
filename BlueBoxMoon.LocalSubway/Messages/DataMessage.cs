@@ -4,6 +4,9 @@ using System.Text;
 
 namespace BlueBoxMoon.LocalSubway.Messages
 {
+    /// <summary>
+    /// A message that contains raw data passing between a connection.
+    /// </summary>
     public class DataMessage
     {
         /// <summary>
@@ -20,7 +23,7 @@ namespace BlueBoxMoon.LocalSubway.Messages
         /// <value>
         ///   <c>true</c> if this instance is compressed; otherwise, <c>false</c>.
         /// </value>
-        public bool IsCompressed { get; set; }
+        public DataCompressionMode CompressionMode { get; set; }
 
         /// <summary>
         /// Gets or sets the data.
@@ -50,7 +53,7 @@ namespace BlueBoxMoon.LocalSubway.Messages
                 }
 
                 message.ConnectionId = new Guid( reader.ReadBytes( 16 ) );
-                message.IsCompressed = reader.ReadBoolean();
+                message.CompressionMode = ( DataCompressionMode ) reader.ReadByte();
 
                 var len = reader.ReadUInt16();
                 message.Data = new ArraySegment<byte>( reader.ReadBytes( len ) );
@@ -75,7 +78,7 @@ namespace BlueBoxMoon.LocalSubway.Messages
 
             writer.Write( ( byte ) 1 );
             writer.Write( ConnectionId.ToByteArray() );
-            writer.Write( false );
+            writer.Write( ( byte ) CompressionMode );
             writer.Write( ( ushort ) Data.Count );
             writer.Write( Data.Array, Data.Offset, Data.Count );
 

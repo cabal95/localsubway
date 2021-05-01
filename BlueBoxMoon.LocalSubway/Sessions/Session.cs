@@ -128,13 +128,16 @@ namespace BlueBoxMoon.LocalSubway.Sessions
 
                         var bytes = data.Data;
 
-                        if ( data.IsCompressed )
+                        if ( data.CompressionMode == DataCompressionMode.Deflate )
                         {
                             using ( var memoryStream = new MemoryStream() )
                             {
-                                using ( var deflateStream = new DeflateStream( memoryStream, CompressionMode.Decompress, false ) )
+                                using ( var srcStream = new MemoryStream( bytes.Array, bytes.Offset, bytes.Count ) )
                                 {
-                                    deflateStream.Write( bytes.Array, bytes.Offset, bytes.Count );
+                                    using ( var deflateStream = new DeflateStream( srcStream, CompressionMode.Decompress, false ) )
+                                    {
+                                        deflateStream.CopyTo( memoryStream );
+                                    }
                                 }
 
                                 bytes = new ArraySegment<byte>( memoryStream.ToArray() );
@@ -239,11 +242,31 @@ namespace BlueBoxMoon.LocalSubway.Sessions
         /// <param name="data">The data.</param>
         public Task SendDataAsync( Guid connectionId, ArraySegment<byte> data )
         {
+#if false
+            using ( var memoryStream = new MemoryStream() )
+            {
+                using ( var deflateStream = new DeflateStream( memoryStream, CompressionMode.Compress, false ) )
+                {
+                    deflateStream.Write( data.Array, data.Offset, data.Count );
+                }
+
+                data = new ArraySegment<byte>( memoryStream.ToArray() );
+            }
+
             var message = new DataMessage
             {
                 ConnectionId = connectionId,
+                CompressionMode = DataCompressionMode.Deflate,
                 Data = data
             };
+#else
+            var message = new DataMessage
+            {
+                ConnectionId = connectionId,
+                CompressionMode = DataCompressionMode.None,
+                Data = data
+            };
+#endif
 
             SendQueue.Enqueue( message );
 
