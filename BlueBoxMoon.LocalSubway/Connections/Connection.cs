@@ -57,6 +57,15 @@ namespace BlueBoxMoon.LocalSubway.Connections
         #region Methods
 
         /// <summary>
+        /// Starts the connection and begins reading and writing data.
+        /// </summary>
+        /// <returns></returns>
+        public virtual Task StartAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// Sends the data to local side of the connection.
         /// </summary>
         /// <param name="data">The data to be sent.</param>

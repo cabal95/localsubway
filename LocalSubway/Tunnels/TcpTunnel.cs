@@ -54,13 +54,14 @@ namespace BlueBoxMoon.LocalSubway.Cli.Tunnels
         /// <returns>
         /// The <see cref="T:BlueBoxMoon.LocalSubway.Connections.Connection" /> that can now be added to the tunnel.
         /// </returns>
-        public override Task<Connection> CreateConnectionAsync( ClientSession session, Guid connectionId )
+        public override async Task<Connection> CreateConnectionAsync( ClientSession session, Guid connectionId )
         {
             var socket = new SubwayTcpClient( _hostname, _port );
 
-            Connection connection = new TcpClientConnection( connectionId, Id, session, socket );
+            var connection = new TcpClientConnection( connectionId, Id, session, socket );
+            await connection.StartAsync();
 
-            return Task.FromResult( connection );
+            return connection;
         }
 
         #endregion

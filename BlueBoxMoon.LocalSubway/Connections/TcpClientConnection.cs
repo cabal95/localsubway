@@ -45,13 +45,22 @@ namespace BlueBoxMoon.LocalSubway.Connections
         {
             Session = session;
             LocalSocket = socket;
-
-            _ = ReadLocalSocketLoopAsync();
         }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Starts the connection and begins reading and writing data.
+        /// </summary>
+        /// <returns></returns>
+        public override Task StartAsync()
+        {
+            _ = ReadLocalSocketLoopAsync();
+
+            return Task.CompletedTask;
+        }
 
         /// <summary>
         /// Runs the read loop for the local socket.
