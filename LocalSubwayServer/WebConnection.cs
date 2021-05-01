@@ -144,8 +144,17 @@ namespace BlueBoxMoon.LocalSubway.Server
             //
             // Send the request over the tunnel.
             //
-            await _tunnel.Session.SendDataAsync( Id, new ArraySegment<byte>( requestStream.ToArray() ) );
+            requestStream.Position = 0;
+            for ( int i = 0; i < requestStream.Length; i += 4096 )
+            {
+                var bytes = new byte[4096];
+                var size = ( int ) Math.Min( requestStream.Length - i, 4096 );
 
+                requestStream.Read( bytes, 0, size );
+                var segment = new ArraySegment<byte>( bytes, 0, size );
+
+                await _tunnel.Session.SendDataAsync( Id, segment );
+            }
         }
 
         /// <summary>

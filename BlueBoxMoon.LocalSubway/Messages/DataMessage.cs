@@ -65,6 +65,11 @@ namespace BlueBoxMoon.LocalSubway.Messages
         /// <returns>A <see cref="Stream"/> that contains this encoded instance.</returns>
         public Stream ToStream()
         {
+            if ( Data.Count > ushort.MaxValue )
+            {
+                throw new Exception( $"Attempt to write more than {ushort.MaxValue} bytes in DataMessage." );
+            }
+
             var stream = new MemoryStream();
             var writer = new BinaryWriter( stream, Encoding.UTF8, true );
 

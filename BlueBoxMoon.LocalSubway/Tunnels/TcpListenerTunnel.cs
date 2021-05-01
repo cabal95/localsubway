@@ -100,6 +100,7 @@ namespace BlueBoxMoon.LocalSubway.Tunnels
                 try
                 {
                     await Session.AddConnection( connection, CancellationTokenSource.Token );
+                    await connection.StartAsync();
                 }
                 catch
                 {
