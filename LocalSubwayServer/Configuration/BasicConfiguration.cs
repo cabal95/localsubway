@@ -12,5 +12,13 @@ namespace BlueBoxMoon.LocalSubway.Server.Configuration
         /// The type of the authentication to use.
         /// </value>
         public AuthenticationType AuthType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the primary domain that will be used to map subdomains.
+        /// </summary>
+        /// <value>
+        /// The primary domain that will be used to map subdomains.
+        /// </value>
+        public string Domain { get; set; }
     }
 }
