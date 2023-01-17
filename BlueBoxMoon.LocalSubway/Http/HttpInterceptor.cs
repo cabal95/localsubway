@@ -120,6 +120,10 @@ namespace BlueBoxMoon.LocalSubway.Http
                 if ( count > 0 )
                 {
                     await OutputStream.WriteAsync( buffer, offset, count, cancellationToken );
+
+                    // Flush the stream, otherwise the remote server might be
+                    // waiting for us to send the final few bytes.
+                    await OutputStream.FlushAsync( cancellationToken );
                 }
 
                 return;
